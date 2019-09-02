@@ -14,7 +14,7 @@ const base64url = buf => buf
   .replace(/\+/g, '-')
   .replace(/\//g, '_')
 
-async function configure ({ testnet, advanced }, passedFields) {
+async function configure ({ testnet, advanced }) {
   const servers = connectorList
   const defaultParent = servers[Math.floor(Math.random() * servers.length)]
   const res = {}
@@ -39,7 +39,13 @@ async function configure ({ testnet, advanced }, passedFields) {
     message: 'Currency scale to use to connect to parent:',
     default: '9'
   }]
-
+  
+  if (process.argv.includes('passedFields')) {
+    var passedFields = process.argv[process.argv.indexOf('passedFields')+1]
+  }
+  else {
+    passedFields={}
+  }
   for (const field of fields) {
     if (passedFields.hasOwnProperty(field.name)){
       res[field.name] = passedFields[field.name]
