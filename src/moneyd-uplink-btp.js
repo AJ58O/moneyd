@@ -14,7 +14,7 @@ const base64url = buf => buf
   .replace(/\+/g, '-')
   .replace(/\//g, '_')
 
-async function configure ({ testnet, advanced }) {
+async function configure ({ testnet, advanced }, passedFields) {
   const servers = connectorList
   const defaultParent = servers[Math.floor(Math.random() * servers.length)]
   const res = {}
@@ -41,7 +41,12 @@ async function configure ({ testnet, advanced }) {
   }]
 
   for (const field of fields) {
+    if (passedFields.hasOwnProperty(field.name)){
+      res[field.name] = passedFields[field.name]
+    }
+    else{
     res[field.name] = (await inquirer.prompt(field))[field.name]
+    }
   }
 
   // Create btp server uri for upstream
